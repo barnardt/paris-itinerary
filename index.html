@@ -152,6 +152,49 @@
     text-decoration: none;
   }
   .transit:hover { color: #ffe9d6; }
+  .transit-label { font-weight: 700; font-size: 15px; margin: 6px 0 10px; }
+  .official { font-size: 14px; margin: 0 0 12px; color: var(--muted); }
+  .weather {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    font-size: 14.5px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 9px 14px;
+    margin: 12px 0 14px;
+    color: #4a443c;
+  }
+  .weather .w-icon {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    color: #6b645b;
+  }
+  .weather .w-icon svg { width: 100%; height: 100%; display: block; }
+  .weather .w-icon.sun { color: #b7791f; }
+  .weather .w-main { font-weight: 700; color: var(--ink); }
+  .weather .w-src {
+    font-size: 12.5px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 1px 9px;
+    background: var(--paper);
+  }
+  .weather.live .w-src { color: #1f6b3a; border-color: #bcd9c4; background: #eef7f0; }
+  .map-embed { margin: 16px 0 20px; }
+  .map-embed iframe {
+    width: 100%;
+    height: 320px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #e9e2d4;
+    display: block;
+  }
+  .map-embed .map-link { margin: 8px 0 0; font-size: 14px; }
   .card {
     background: var(--card);
     border: 1px solid var(--line);
@@ -218,9 +261,11 @@
     body { font-size: 16px; }
     header.hero { padding: 42px 0 26px; }
     h2 { font-size: 25px; }
+    .map-embed iframe { height: 280px; }
   }
   @media print {
     nav.toc { display: none; }
+    .map-embed { display: none; }
     body { background: #fff; }
     .wrap { max-width: 100%; }
     figure img { border: 0; }
@@ -229,6 +274,43 @@
 </style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="w-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="12" cy="12" r="4.2"/>
+      <path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/>
+    </symbol>
+    <symbol id="w-partly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="8.5" cy="8.5" r="3"/>
+      <path d="M8.5 2.5v1.6M2.5 8.5h1.6M4.3 4.3l1.1 1.1M12.7 4.3l-1.1 1.1"/>
+      <path d="M9 20h9.5a3.5 3.5 0 0 0 .6-6.95A5.5 5.5 0 0 0 8.6 14.6 3 3 0 0 0 9 20z"/>
+    </symbol>
+    <symbol id="w-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M6.5 19h11a4 4 0 0 0 .7-7.94A6.5 6.5 0 0 0 5.7 12.7 3.5 3.5 0 0 0 6.5 19z"/>
+    </symbol>
+    <symbol id="w-fog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M6.5 15h11a4 4 0 0 0 .7-7.94A6.5 6.5 0 0 0 5.7 8.7 3.5 3.5 0 0 0 6.5 15z"/>
+      <path d="M7 18.5h10M8.5 21h7"/>
+    </symbol>
+    <symbol id="w-drizzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M6.5 15h11a4 4 0 0 0 .7-7.94A6.5 6.5 0 0 0 5.7 8.7 3.5 3.5 0 0 0 6.5 15z"/>
+      <path d="M9.5 18v1.5M14.5 18v1.5" stroke-dasharray="0.1 2.6"/>
+    </symbol>
+    <symbol id="w-rain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M6.5 15h11a4 4 0 0 0 .7-7.94A6.5 6.5 0 0 0 5.7 8.7 3.5 3.5 0 0 0 6.5 15z"/>
+      <path d="M8.5 17.5l-1 2.5M13 17.5l-1 2.5M17.5 17.5l-1 2.5"/>
+    </symbol>
+    <symbol id="w-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M6.5 15h11a4 4 0 0 0 .7-7.94A6.5 6.5 0 0 0 5.7 8.7 3.5 3.5 0 0 0 6.5 15z"/>
+      <path d="M8.5 18.2v2M7.6 19.2h1.8M13 18.2v2M12.1 19.2h1.8M17.2 18.2v2M16.3 19.2h1.8"/>
+    </symbol>
+    <symbol id="w-storm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6.5 14h11a4 4 0 0 0 .7-7.94A6.5 6.5 0 0 0 5.7 7.7 3.5 3.5 0 0 0 6.5 14z"/>
+      <path d="M12.5 13l-2.5 4h3l-1 4 4.5-5.5h-3l1-2.5z"/>
+    </symbol>
+  </defs>
+</svg>
 
 <header class="hero">
   <div class="wrap">
@@ -248,7 +330,6 @@
   <div class="inner">
     <a href="#thesis">Theme</a>
     <a href="#before">Before you go</a>
-    <a href="#arrival">Arrival</a>
     <a href="#day1">Day 1</a>
     <a href="#day2">Day 2</a>
     <a href="#day3">Day 3</a>
@@ -257,8 +338,6 @@
     <a href="#day6">Day 6</a>
     <a href="#day7">Day 7</a>
     <a href="#day8">Day 8</a>
-    <a href="#if-wrong">If wrong</a>
-    <a href="#notes">Notes</a>
   </div>
 </nav>
 
@@ -270,16 +349,15 @@
   <h2>One story, in the places where it happened</h2>
   <p>France changed rulers many times. Kings ruled for centuries. The French Revolution of 1789 removed the king and declared a republic. Then Napoleon took power and crowned himself emperor. Then France went back and forth between kings, emperors, and republics. Paris still holds the buildings from each stage.</p>
   <p>Three wars matter for this trip. The Franco-Prussian War of 1870 to 1871: Prussia (the state that led the new Germany) invaded France, surrounded Paris for months, and starved the city into surrender. World War I, 1914 to 1918: France and Germany fought again, mostly in trenches in northern France, and France ended on the winning side. World War II, 1939 to 1945: Germany invaded France in 1940 and occupied Paris until August 1944.</p>
-  <p>Each day maps to that story. Denfert pairs a memorial to the 1870 war with a museum about the Nazi occupation and the Liberation of Paris in 1944. The Invalides is the army museum, set inside a hospital for wounded soldiers. The Hall of Mirrors at Versailles is the room where Germany celebrated its 1871 victory and where the World War I peace treaty was signed in 1919. The Louvre is the palace of French kings, plus the paintings where the state and its critics argued about these events. The boat shows the whole city from the river at sunset. Fashion on the last full day shows how Paris rebuilt its image after the war.</p>
-  <p>You do not go up the Eiffel Tower. You see it from the boat. That is enough.</p>
+  <p>Each day maps to that story. The first day is rest in Bagneux, no transit. Denfert pairs a memorial to the 1870 war with a museum about the Nazi occupation and the Liberation of Paris in 1944. Les Invalides is one full day in the same complex: Louis XIV&rsquo;s hospital for wounded soldiers, Napoleon&rsquo;s tomb, and the Army Museum through both world wars, including the twentieth-century galleries. Sceaux is its own quiet day: the Le N&ocirc;tre garden that previews Versailles at a smaller scale. The Louvre is the break from the war story: the palace of French kings, plus Victory, Venus, Leonardo and the Renaissance masters, and Vermeer. Versailles is the stage where the 1871 defeat and the 1919 peace were both performed. Fashion plus the boat on the last full day shows how Paris rebuilt its image after the war, then shows the whole city from the river at sunset.</p>
   <div class="rule">Your nearest station is Bagneux–Lucie Aubrac on Line 4. It is step-free. All map links start from the pin 48.8035 N, 2.3174 E, outside the station and near the apartment. Almost every trip uses Line 4 with no change. Twice you also use Line 1. Once you take a train from Montparnasse. Bring a carrier and a stroller. Use the carrier in stations and crowded rooms.</div>
-  <p>November is grey, about 5 to 10 degrees, and dark by about half past four to half past five. That helps. There are fewer crowds, and there is a reason to be on the water at 4pm. Book the sailing nearest 4pm to see the lights come on.</p>
+  <p>November is grey, about 5 to 10 degrees, and dark by about half past four to half past five.</p>
 </section>
 
 <section class="block" id="before">
   <p class="eyebrow">Before you go</p>
   <h2>Check closing days when you book, then order the days around them</h2>
-  <p>Do not find out about a Monday closure at the station.</p>
+  <p>The Louvre, Versailles, Rodin, the Shoah memorial, and the Liberation museum each close on a fixed weekday. Do not find out about a Monday closure at the station.</p>
   <table class="closures">
     <tr><th>Closed</th><th>Places</th></tr>
     <tr><td>Tuesdays</td><td>Louvre and Mus&eacute;e de l&rsquo;Orangerie</td></tr>
@@ -287,47 +365,45 @@
     <tr><td>Saturdays</td><td>M&eacute;morial de la Shoah</td></tr>
     <tr><td>Monday</td><td>Mus&eacute;e de la Lib&eacute;ration de Paris (open Tuesday to Sunday; entry is free, book the command-post visit)</td></tr>
   </table>
-  <p>For a Friday arrival the weekdays fall as follows. Friday: arrival. Saturday: Sceaux. Sunday: Denfert. Monday: Invalides. Tuesday: Army Museum and boat. Wednesday: Louvre. Thursday: Versailles. Friday: fashion. Saturday: out. Every destination is open on its day. Two lunches need Sunday and Monday plans, marked below.</p>
   <p>Book timed entry for the Louvre, Versailles, the Army Museum, the Liberation command post, the boat, and the Galerie Dior. The Yves Saint Laurent museum is shut for renovation until autumn 2027, so Dior is the fashion booking. Book three lunches for 12:30. You eat dinner in Bagneux all week, so shop for groceries on arrival night or the first morning.</p>
 </section>
 
-<section class="block" id="arrival">
-  <p class="eyebrow">Arrival evening &middot; Friday</p>
-  <h2>Taxi to the apartment</h2>
-  <p>Take a prepaid transfer or a metered taxi to the apartment in Bagneux (92220). For maps, use the pin 48.8035 N, 2.3174 E, outside Bagneux–Lucie Aubrac station. Do not take the RER with a baby and bags at night. Orly airport is close. Charles de Gaulle is far. Eat, sleep, nothing else.</p>
-</section>
-
 <section class="day" id="day1">
-  <p class="eyebrow">Day 1 &middot; Saturday &middot; No metro</p>
-  <h2>Parc de Sceaux (Saturday)</h2>
-  <p>The night arrival used up the baby&rsquo;s patience. Stay local.</p>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Chateau+de+Sceaux&travelmode=walking">Walk: apartment &rarr; ch&acirc;teau &nearr;</a></p>
-  <figure>
-    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ch%C3%A2teau_de_Sceaux.jpg?width=1200" alt="The château at Sceaux" loading="lazy">
-    <figcaption>The estate at Sceaux. <a href="https://commons.wikimedia.org/w/index.php?search=Parc+de+Sceaux&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
-  </figure>
-  <p>Jean-Baptiste Colbert was the finance minister of Louis XIV. Louis XIV ruled France from 1643 to 1715 with total personal power. Colbert bought this estate in 1670. He hired Andr&eacute; Le N&ocirc;tre, the garden designer who also laid out Versailles, to design the park. You see the same style here: a long canal, straight tree-lined paths, a cascade, all arranged on strict symmetrical axes.</p>
-  <p>The French Revolution of 1789 overthrew the king. The old ch&acirc;teau was pulled down after the Revolution. The house you see now is from the 1800s, set inside the 1600s garden plan. In November the flower beds are bare and the cascade may be dry. That makes the geometry easier to see. Remember the pattern. You will see it again, much larger, on the terrace at Versailles.</p>
-  <p>Leave late morning. Enter from the Bagneux side, walk to the ch&acirc;teau, do one loop, and leave when the baby is done. The park is the visit. Do not count on the house being open.</p>
+  <p class="eyebrow">Day 1 &middot; Saturday &middot; No transit</p>
+  <h2>Rest in Bagneux (Saturday)</h2>
+  <p class="weather" data-weather-day="day1"><span class="w-icon" aria-hidden="true"><svg><use href="#w-drizzle"/></svg></span><span class="w-main">9&ndash;13&deg;C &middot; Light drizzle</span><span>0.6 mm rain &middot; Wind 9 km/h</span><span class="w-src">Sample: 8 Nov 2025</span></p>
+  <p>After the night arrival, stay local. No metro, no RER, no tickets. Sleep late, find the bakery, walk the neighbourhood with the baby in the carrier, and let everyone reset.</p>
+  <p>One loop is enough. Walk to the neighbourhood park, sit a while, walk back a different way. If the baby naps, that is the day working. If energy is high in the afternoon, do a second short walk, still on foot. Do not get on transit just to try it.</p>
+  <p class="transit-label">Walk: apartment &rarr; Carrefour</p>
+  <div class="map-embed">
+    <iframe title="Walking route from the apartment to Carrefour Arcueil" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Carrefour,%2075%20Avenue%20Aristide%20Briand,%20Arcueil&amp;dirflg=w&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Carrefour,+75+Avenue+Aristide+Briand,+Arcueil&travelmode=walking">Open in Google Maps &nearr;</a></p>
+  </div>
   <div class="card lunch">
-    <p class="label">Lunch</p>
-    <p>Walk into Sceaux and eat on Rue Houdan, or bring food back to the apartment. This is not the day for a destination restaurant. <a href="https://www.google.com/maps/dir/?api=1&origin=Chateau+de+Sceaux&destination=Rue+Houdan,+Sceaux&travelmode=walking">Rue Houdan</a>.</p>
+    <p class="label">Lunch and groceries</p>
+    <p>Eat near the apartment or cook from what you have. Use the afternoon for the week&rsquo;s practical run: supermarket, water, milk, fruit, bread, and dinner supplies. You eat dinner in Bagneux all week, so this run saves later days.</p>
   </div>
   <details class="instead">
-    <summary>Instead: rest</summary>
-    <p>Stay at the apartment, visit a supermarket, watch a film. Do not get on the metro just to try it.</p>
+    <summary>Instead: Bagneux</summary>
+    <p>Stay at the apartment, watch a film, sleep. The trip starts tomorrow.</p>
   </details>
 </section>
 
 <section class="day" id="day2">
   <p class="eyebrow">Day 2 &middot; Sunday &middot; Line 4, direct</p>
   <h2>Denfert-Rochereau (Sunday)</h2>
-  <p>This is the commute to learn. The history starts at the station. The museum is open Tuesday to Sunday, so Sunday works. If you want a slow start, the Sunday morning service at Saint-Sulpice (one stop up Line 4, sit at the back, leave when you need to) fits before the museum opens at 10.</p>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+de+la+Liberation+de+Paris,+Denfert-Rochereau&travelmode=transit">Transit: apartment &rarr; museum &nearr;</a></p>
+  <p class="official">Official site: <a target="_blank" rel="noopener" href="https://www.museeliberation-leclerc-moulin.paris.fr/">Mus&eacute;e de la Lib&eacute;ration</a></p>
+  <p class="weather" data-weather-day="day2"><span class="w-icon" aria-hidden="true"><svg><use href="#w-cloud"/></svg></span><span class="w-main">7&ndash;12&deg;C &middot; Overcast</span><span>Dry &middot; Wind 10 km/h</span><span class="w-src">Sample: 9 Nov 2025</span></p>
   <figure>
-    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lion_de_Belfort,_Paris.jpg?width=1200" alt="The Lion of Belfort, Place Denfert-Rochereau" loading="lazy">
-    <figcaption>Place Denfert-Rochereau. <a href="https://commons.wikimedia.org/w/index.php?search=Place+Denfert-Rochereau&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20de%20Belfort%2C%20Place%20Denfert-Rochereau%2C%20Paris%2015%20August%202013.jpg?width=1200" alt="The Lion of Belfort, Place Denfert-Rochereau" loading="lazy">
+    <figcaption>Place Denfert-Rochereau. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Place+Denfert-Rochereau&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
   </figure>
+  <p>Denfert-Rochereau is a square in the 14th district where the Lion de Belfort memorial to the 1870 war faces the museum of the Nazi occupation and the 1944 Liberation. The museum is open Tuesday to Sunday, so Sunday works. If you want a slow start, the Sunday morning service at Saint-Sulpice (one stop up Line 4, sit at the back, leave when you need to) fits before the museum opens at 10.</p>
+  <p class="transit-label">Transit: apartment &rarr; museum</p>
+  <div class="map-embed">
+    <iframe title="Transit route from the apartment to the Liberation museum" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Musee%20de%20la%20Liberation%20de%20Paris,%20Denfert-Rochereau&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+de+la+Liberation+de+Paris,+Denfert-Rochereau&travelmode=transit">Open in Google Maps &nearr;</a></p>
+  </div>
   <p>Two defeats, seventy years apart, share one square.</p>
   <p>The Lion de Belfort stands in the middle of the square. It is a copy by the sculptor Bartholdi (who also made the Statue of Liberty) of his lion monument in the city of Belfort. It honors Colonel Denfert-Rochereau, who defended Belfort against the Prussian army in the Franco-Prussian War of 1870 to 1871. In that war Paris itself was surrounded for months. People starved. France lost and paid a large indemnity. The square and the station are named after Denfert-Rochereau. The lion is the 1870 memorial. It takes five minutes, outdoors.</p>
   <p>The museum on the square covers World War II. Germany invaded France in 1940 and occupied Paris for four years. The building is a tollhouse from the 1780s, designed by Ledoux as part of a wall where goods entering Paris were taxed. The museum tells two stories. Jean Moulin was sent by General Charles de Gaulle (who led Free France from London) to unite the French Resistance groups. Moulin chaired their first joint council in 1943, was arrested by the Gestapo (the Nazi secret police), tortured, and died. General Leclerc commanded the French 2nd Armored Division that entered Paris on 24 to 25 August 1944 and freed the city. Book the command-post visit if offered. From a bunker under this square, Colonel Rol-Tanguy directed the Paris fighters during the August 1944 uprising. The bunker is the part visitors miss. It is the part that makes the visit worth it.</p>
@@ -337,7 +413,7 @@
     <p>Le Severo, the butcher&rsquo;s bistro near the square, is closed on weekends, so it is not this trip. Eat on Avenue du G&eacute;n&eacute;ral Leclerc, the avenue you arrived on: the brasseries there serve Sunday lunch. Then rejoin Line 4 at Denfert. Book the table when you book the museum slot, and confirm Sunday hours.</p>
   </div>
   <details class="instead">
-    <summary>Instead</summary>
+    <summary>Instead: the Catacombs</summary>
     <p>One parent visits the Catacombs while the other waits in a caf&eacute; on the square. Do not take the baby down. It is a long stairway, damp tunnels, and no easy exit. Or swap this day with the Louvre if you would rather start with paintings than war.</p>
   </details>
 </section>
@@ -345,83 +421,101 @@
 <section class="day" id="day3">
   <p class="eyebrow">Day 3 &middot; Monday &middot; Line 4 plus a walk</p>
   <h2>Les Invalides (Monday)</h2>
-  <p>The Army Museum is open daily, so Monday works.</p>
-  <p>Take Line 4 to Saint-Germain-des-Pr&eacute;s and walk west. If it rains, take Line 4 to Montparnasse then Line 13 to Invalides. With a stroller, a taxi to Place Vauban is the best arrival. The dome is the first thing you see.</p>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Hotel+des+Invalides,+Paris&travelmode=transit">Transit: apartment &rarr; Invalides &nearr;</a></p>
+  <p class="official">Official site: <a target="_blank" rel="noopener" href="https://www.musee-armee.fr/">Mus&eacute;e de l&rsquo;Arm&eacute;e</a></p>
+  <p class="weather" data-weather-day="day3"><span class="w-icon" aria-hidden="true"><svg><use href="#w-drizzle"/></svg></span><span class="w-main">7&ndash;12&deg;C &middot; Moderate drizzle</span><span>1.5 mm rain &middot; Wind 16 km/h</span><span class="w-src">Sample: 10 Nov 2025</span></p>
   <figure>
-    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Les_Invalides.jpg?width=1200" alt="The dome of the Invalides" loading="lazy">
-    <figcaption>Les Invalides from the north. <a href="https://commons.wikimedia.org/w/index.php?search=H%C3%B4tel+des+Invalides&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/H%C3%B4tel_des_Invalides%2C_North_View%2C_Paris_7e_140402_1.jpg?width=1200" alt="The dome of the Invalides" loading="lazy">
+    <figcaption>Les Invalides from the north. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=H%C3%B4tel+des+Invalides&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
   </figure>
+  <p>Les Invalides is Louis XIV&rsquo;s hospital for wounded soldiers, with Mansart&rsquo;s dome over Napoleon&rsquo;s tomb and the Army Museum in the wings. The Army Museum is open daily, so Monday works. This is the only Invalides day, so include the twentieth-century rooms rather than saving them.</p>
+  <p class="transit-label">Transit: apartment &rarr; Invalides</p>
+  <div class="map-embed">
+    <iframe title="Transit route from the apartment to the Invalides" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Hotel%20des%20Invalides,%20Paris&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Hotel+des+Invalides,+Paris&travelmode=transit">Open in Google Maps &nearr;</a></p>
+  </div>
+  <p>Take Line 4 to Saint-Germain-des-Pr&eacute;s and walk west. If it rains, take Line 4 to Montparnasse then Line 13 to Invalides. With a stroller, a taxi to Place Vauban is the best arrival. The dome is the first thing you see.</p>
   <p>Louis XIV founded this hospital in 1670 for soldiers wounded in his wars. The architect Lib&eacute;ral Bruant designed the long buildings and the soldiers&rsquo; church. Jules Hardouin-Mansart designed the Dome church, finished in 1706. The building makes a claim: the state owes its wounded soldiers a palace, and that palace also shows off state power.</p>
-  <p>Do three things, not the whole museum.</p>
+  <p>Do four things, in this order, then leave. Three to three and a half hours is a full visit with the baby.</p>
   <p>First, the tomb of Napoleon, while everyone is fresh. Napoleon Bonaparte was the general who seized power in 1799, crowned himself emperor in 1804, conquered much of Europe, and was finally exiled to the island of Saint Helena, where he died in 1821. His body was brought back to France in 1840. The tomb was finished in 1861 to a design by Visconti: a red stone coffin at the bottom of a round open well, under the full height of the dome. Give it fifteen quiet minutes. You need no audio guide.</p>
   <p>Second, the models of fortress towns (plans-reliefs), usually on an upper floor of the Army Museum. They were started under Louis XIV, when the engineer Vauban built rings of forts around France. Each model shows a whole fortified town from above, with walls the size of your hand. Confirm that floor is open when you book. It is the least famous great thing in the building.</p>
-  <p>Third, if you still have energy, walk through one Napoleonic gallery, then leave. Two to two and a half hours is a full visit. The twentieth-century galleries are tomorrow, in the same complex.</p>
+  <p>Third, one pass through the Napoleonic galleries, without trying to see every uniform. Then the twentieth-century rooms: one path through 1914 to 1918 (World War I), then 1939 to 1945 (World War II), then the Museum of the Order of the Liberation in the same complex. The Order is an award Charles de Gaulle created in 1940 for heroes of the liberation. Jean Moulin, from yesterday&rsquo;s museum, received it. Ninety minutes for this half, then out.</p>
   <div class="card lunch">
     <p class="label">Lunch &middot; 12:30</p>
-    <p>Caf&eacute; Constant, 139 rue Saint-Dominique: a neighborhood bistro from Christian Constant with classic dishes, fair prices, and no show. Short walk from the dome. Book 12:30 and confirm Monday hours when you book. <a href="https://www.google.com/maps/dir/?api=1&origin=Hotel+des+Invalides&destination=Cafe+Constant,+139+Rue+Saint-Dominique,+Paris&travelmode=walking">Route</a>. If it is full, Les Cocottes next door is easier.</p>
+    <p>Caf&eacute; Constant, 139 rue Saint-Dominique: a neighborhood bistro from Christian Constant with classic dishes, fair prices, and no show. Short walk from the dome. Book 12:30 and confirm Monday hours when you book. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Hotel+des+Invalides&destination=Cafe+Constant,+139+Rue+Saint-Dominique,+Paris&travelmode=walking">Route</a>. If it is full, Les Cocottes next door is easier.</p>
     <p>Nothing after lunch. If Barth&eacute;l&eacute;my, 51 rue de Grenelle, is open, buy cheese for the apartment. Do not make it a detour.</p>
   </div>
   <details class="instead">
-    <summary>Instead</summary>
-    <p>See only the dome and the tomb, about an hour. This suits you if rooms of objects in cases tire you faster than big spaces do. Save the fortress models for the morning you return.</p>
+    <summary>Instead: the Rodin Museum</summary>
+    <p>See only the dome and the tomb, about an hour. This suits you if rooms of objects in cases tire you faster than big spaces do. Or skip the uniforms for the Rodin Museum, 77 rue de Varenne, fifteen minutes on foot from the dome: Auguste Rodin (1840 to 1917), the H&ocirc;tel Biron mansion as his studio, the Thinker and the Burghers of Calais in the garden. Ninety minutes, then out. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+Rodin,+77+Rue+de+Varenne,+Paris&travelmode=transit">Route from the apartment</a>.</p>
   </details>
 </section>
 
 <section class="day" id="day4">
-  <p class="eyebrow">Day 4 &middot; Tuesday &middot; Same streets, then the river</p>
-  <h2>The Army Museum, then the boat (Tuesday)</h2>
-  <p>Same commute as yesterday. This is the longest day. Keep a rest between lunch and the boat.</p>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Hotel+des+Invalides,+Paris&travelmode=transit">Transit: apartment &rarr; Invalides &nearr;</a></p>
-  <p>If yesterday went well, go back into the Army Museum for the twentieth century only. One path: 1914 to 1918 (World War I), then 1939 to 1945 (World War II), then the Museum of the Order of the Liberation in the same complex. The Order is an award Charles de Gaulle created in 1940 for heroes of the liberation. Jean Moulin, from yesterday&rsquo;s museum, received it. Ninety minutes. Do not try to see every uniform.</p>
-  <p>If yesterday was hard, skip the uniforms. The Rodin Museum, 77 rue de Varenne, is fifteen minutes on foot from the dome. It is closed Mondays. Auguste Rodin (1840 to 1917) was France&rsquo;s most famous sculptor. He used the H&ocirc;tel Biron mansion as his studio. The Thinker and the Burghers of Calais stand in the garden, which still works when the trees are bare. Ninety minutes, then out. <a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+Rodin,+77+Rue+de+Varenne,+Paris&travelmode=transit">Route from the apartment</a>. <a href="https://commons.wikimedia.org/w/index.php?search=Mus%C3%A9e+Rodin+Paris&title=Special:MediaSearch&type=image">Photographs</a>.</p>
-  <div class="card lunch">
-    <p class="label">Lunch, lighter than yesterday</p>
-    <p>You have a boat at 4. Caf&eacute; du March&eacute;, 38 rue Cler: a market-street caf&eacute;, easy with a stroller, done in an hour. <a href="https://www.google.com/maps/dir/?api=1&origin=Hotel+des+Invalides&destination=Cafe+du+Marche,+38+Rue+Cler,+Paris&travelmode=walking">Route</a>. Fontaine de Mars, 129 rue Saint-Dominique, is the proper bistro if you want one more real meal before the water. <a href="https://www.google.com/maps/dir/?api=1&origin=Hotel+des+Invalides&destination=Fontaine+de+Mars,+129+Rue+Saint-Dominique,+Paris&travelmode=walking">Route</a>.</p>
-  </div>
-  <p>Then the river. If you have the legs, walk the esplanade to Pont Alexandre III. If not, taxi to the pier and see the bridge from the boat. Keep the rest in between either way.</p>
+  <p class="eyebrow">Day 4 &middot; Tuesday &middot; RER B, no metro</p>
+  <h2>Sceaux: park and ch&acirc;teau (Tuesday)</h2>
+  <p class="official">Official site: <a target="_blank" rel="noopener" href="https://domaine-de-sceaux.hauts-de-seine.fr/">Domaine de Sceaux</a></p>
+  <p class="weather" data-weather-day="day4"><span class="w-icon" aria-hidden="true"><svg><use href="#w-cloud"/></svg></span><span class="w-main">9&ndash;15&deg;C &middot; Overcast</span><span>Dry &middot; Wind 19 km/h</span><span class="w-src">Sample: 11 Nov 2025</span></p>
   <figure>
-    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pont_Alexandre_III.jpg?width=1200" alt="Pont Alexandre III" loading="lazy">
-    <figcaption>Pont Alexandre III, on the axis of the Invalides. <a href="https://commons.wikimedia.org/w/index.php?search=Pont+Alexandre+III&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ch%C3%A2teau_de_Sceaux%2C_Hauts-de-Seine_(3).jpg?width=1200" alt="The château at Sceaux" loading="lazy">
+    <figcaption>The estate at Sceaux. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Parc+de+Sceaux&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
   </figure>
-  <p>The bridge was built for the 1900 world fair and named after the Russian tsar. It marked the alliance between France and Russia. It is a single low steel arch, so it does not block the view, and it sits on the axis running from the Invalides dome. Gold statues, lamp posts, the Grand Palais beyond. It is the ceremonial end of the building you spent the morning in.</p>
-  <div class="card">
-    <p class="label">The boat &middot; sailing nearest 4pm</p>
-    <p>One hour, sightseeing only, not dinner and not a show. Book Bateaux Parisiens or Vedettes de Paris from Port de la Bourdonnais, at Pont de l&rsquo;Alma, on the sailing closest to 4pm. Choose a larger boat. Sit outside for the twenty minutes that matter if it is dry, inside if the wind is up. <a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Port+de+la+Bourdonnais,+Paris&travelmode=transit">Pier from the apartment</a>. <a href="https://www.bateauxparisiens.com/">Bateaux Parisiens</a>.</p>
-    <p>The Eiffel Tower will appear from the water as the lights replace the sky. That is the version worth having. The summit queue is not. <a href="https://commons.wikimedia.org/w/index.php?search=Seine+cruise+Paris+Eiffel&title=Special:MediaSearch&type=image">The river in photographs</a>.</p>
+  <p>Sceaux gets its own day, between the Invalides and the Louvre. It is a 17th-century estate just south of Bagneux: Le N&ocirc;tre gardens outside, and the 19th-century ch&acirc;teau with the museum of &Icirc;le-de-France life inside. After yesterday&rsquo;s long interior day, stay outdoors and let the baby move.</p>
+  <p class="transit-label">Transit: apartment &rarr; Parc de Sceaux (RER B)</p>
+  <div class="map-embed">
+    <iframe title="RER B route from the apartment to Parc de Sceaux station" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Gare%20du%20Parc%20de%20Sceaux&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Gare+du+Parc+de+Sceaux&travelmode=transit">Open in Google Maps &nearr;</a></p>
   </div>
-  <p>Home by about 6. This is the fullest day of the week. If the afternoon falls apart, move the boat to Day 7. Take one cruise total, never two.</p>
+  <p>Jean-Baptiste Colbert was the finance minister of Louis XIV. Louis XIV ruled France from 1643 to 1715 with total personal power. Colbert bought this estate in 1670. He hired Andr&eacute; Le N&ocirc;tre, the garden designer who also laid out Versailles, to design the park. You see the same style here: a long canal, straight tree-lined paths, a cascade, all arranged on strict symmetrical axes.</p>
+  <p>The French Revolution of 1789 overthrew the king. The old ch&acirc;teau was pulled down after the Revolution. The house you see now is from the 1800s, set inside the 1600s garden plan. In November the flower beds are bare and the cascade may be dry. That makes the geometry easier to see. Remember the pattern. You will see it again, much larger, on the terrace at Versailles.</p>
+  <p>The ch&acirc;teau interior is the wet-weather part of the day. The house you see now was built between 1856 and 1862 for the duc and duchesse de Tr&eacute;vise, on the site of Colbert&rsquo;s house. It holds the museum of the domain: paintings, sculpture, furniture, and ceramics tracing the owners from Colbert to the duc du Maine to the duc de Penthi&egrave;vre to the Tr&eacute;vise, French taste from Louis XIV to Napol&eacute;on III. In November it opens afternoons and is closed Mondays, so Tuesday works. Allow an hour inside, carrier not stroller, and check hours when you book.</p>
+  <p>Leave late morning. Do not walk from the apartment, it is about 3 km each way. Walk about fifteen minutes to Gare d&rsquo;Arcueil&ndash;Cachan (RER B), take a southbound train toward Saint-R&eacute;my-l&egrave;s-Chevreuse, not Robinson, and get off at Parc de Sceaux, three stops via Bagneux and Bourg-la-Reine. From there it is a short walk to the All&eacute;e d&rsquo;Honneur entrance. Enter there, walk to the ch&acirc;teau, do one loop of the park, and leave when the baby is done. If it rains, skip the long loop and go straight to the ch&acirc;teau for the afternoon opening, then lunch in town.</p>
+  <div class="card lunch">
+    <p class="label">Lunch</p>
+    <p>Walk through the park into Sceaux and eat on Rue Houdan, or bring food back to the apartment. This is not the day for a destination restaurant. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Chateau+de+Sceaux&destination=Rue+Houdan,+Sceaux&travelmode=walking">Rue Houdan</a>. For the return, use Gare de Sceaux (RER B, Robinson branch) in the town, northbound direct to Arcueil&ndash;Cachan.</p>
+  </div>
+  <details class="instead">
+    <summary>Instead: Bagneux</summary>
+    <p>Stay at the apartment. Sceaux keeps for another Tuesday, and yesterday was already full.</p>
+  </details>
 </section>
 
 <section class="day" id="day5">
   <p class="eyebrow">Day 5 &middot; Wednesday &middot; Line 4 to Ch&acirc;telet, then Line 1</p>
   <h2>The Louvre (Wednesday)</h2>
-  <p>You will reuse this change of lines. Enter through the Carrousel shopping level, not the pyramid. That entrance is step-free and connects to the station.</p>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+du+Louvre,+Paris&travelmode=transit">Transit: apartment &rarr; Louvre &nearr;</a></p>
+  <p class="official">Official site: <a target="_blank" rel="noopener" href="https://www.louvre.fr/">Louvre</a></p>
+  <p class="weather" data-weather-day="day5"><span class="w-icon" aria-hidden="true"><svg><use href="#w-cloud"/></svg></span><span class="w-main">8&ndash;15&deg;C &middot; Overcast</span><span>Dry &middot; Wind 14 km/h</span><span class="w-src">Sample: 12 Nov 2025</span></p>
   <figure>
-    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Louvre_Museum_Wikimedia_Commons.jpg?width=1200" alt="The Louvre, palace and pyramid" loading="lazy">
-    <figcaption>The palace from the Cour Napol&eacute;on. <a href="https://commons.wikimedia.org/w/index.php?search=Louvre+Museum&title=Special:MediaSearch&type=image">Photographs</a>. <a href="https://www.louvre.fr/">Tickets</a>.</figcaption>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nike%20of%20Samothrake%20Louvre%20Ma2369%20n4.jpg?width=1200" alt="The Winged Victory of Samothrace, top of the Daru staircase" loading="lazy">
+    <figcaption>The Winged Victory of Samothrace, first stop inside. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Nike+of+Samothrace&title=Special:MediaSearch&type=image">Photographs</a>. <a target="_blank" rel="noopener" href="https://www.louvre.fr/">Tickets</a>.</figcaption>
   </figure>
-  <p>Do not tour the Louvre. Use it. Two hours from opening, then out.</p>
-  <p>The building is the main exhibit. A fortress stood here around 1190 under King Philippe Auguste. King Charles V made it a residence. King Fran&ccedil;ois I started the palace. Every later ruler extended it. The glass pyramid from 1989 is only the newest front door. Start in the medieval Louvre, underground in the Sully wing, while you are fresh. The old moat and the base of the keep survive there. Most visitors walk over them toward a famous painting. This room explains the rest: a castle, then a palace, then a museum, on the same ground.</p>
-  <p>Then the Denon wing, and only the large French paintings. Ask for the Daru and Mollien rooms. They hang together, and they show the week&rsquo;s war history in paint.</p>
+  <p>The Louvre is the palace of French kings turned museum, from the Greek sculpture downstairs to the Italian and Dutch painting upstairs. Enter through the Carrousel shopping level, not the pyramid. That entrance is step-free and connects to the station.</p>
+  <p class="transit-label">Transit: apartment &rarr; Louvre</p>
+  <div class="map-embed">
+    <iframe title="Transit route from the apartment to the Louvre" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Musee%20du%20Louvre,%20Paris&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+du+Louvre,+Paris&travelmode=transit">Open in Google Maps &nearr;</a></p>
+  </div>
+  <p>Do not tour the Louvre. Use it. Two and a half hours from opening, then out. This day is the break from the war story: sculpture and painting, not battle painting.</p>
+  <p>The building is still the frame. A fortress stood here around 1190 under King Philippe Auguste. King Charles V made it a residence. King Fran&ccedil;ois I started the palace. Every later ruler extended it. The glass pyramid from 1989 is only the newest front door. If you want the medieval moat in the Sully basement, give it ten minutes at the start, then go up to the art. Do not let it eat the morning.</p>
+  <p>Walk this order. It keeps the stairs and backtracking down with a baby in a carrier.</p>
   <ul class="tight">
-    <li>David&rsquo;s Coronation of Napoleon shows Napoleon crowning himself emperor in 1804. It is propaganda. The new empire paints itself as legitimate.</li>
-    <li>Gros&rsquo;s Bonaparte Visiting the Plague-Stricken at Jaffa shows Napoleon&rsquo;s 1799 Egypt campaign as an act of mercy. It is the official version, not a neutral record.</li>
-    <li>G&eacute;ricault&rsquo;s Raft of the Medusa is about the state failing its people. A French ship wrecked in 1816 because its captain was chosen for his royalist politics, not his skill. The scandal embarrassed the restored king.</li>
-    <li>Delacroix&rsquo;s Liberty Leading the People shows the July Revolution of 1830, which removed King Charles X. It is not 1789. Note the tricolor flag, the barricade, the dead at her feet.</li>
+    <li>Winged Victory of Samothrace, top of the Daru staircase in Denon. Go first, while everyone is fresh and before the groups arrive. Hellenistic, 2nd century BC, found on Samothrace in 1863. Headless, standing into wind on a ship prow. Ten minutes is enough.</li>
+    <li>Venus de Milo, Sully ground floor. Short walk from the staircase. Greek, around 100 BC, found on Milos in 1820. Missing arms, still the standard for the female figure. Same deal: look, then move.</li>
+    <li>Italian Renaissance, Denon first floor. This is the core. Leonardo da Vinci: the Mona Lisa plus the Virgin of the Rocks, the Virgin and Child with Saint Anne, Saint John the Baptist, and La Belle Ferronni&egrave;re, all in the same wing. See the Mona Lisa because you are there, then spend the real time on the other Leonardos and the large Veronese Wedding at Cana hanging opposite it. Raphael&rsquo;s La Belle Jardini&egrave;re and the Saint Michael paintings, Titian, Tintoretto, and Caravaggio&rsquo;s Death of the Virgin are in the same rooms. Forty-five minutes for this run.</li>
+    <li>Dutch masters, Richelieu second floor. Vermeer&rsquo;s The Lacemaker and The Astronomer hang here, the Louvre&rsquo;s two Vermeers. Small, quiet, easy to miss after the big Italian rooms. Rembrandt&rsquo;s Bathsheba and the Supper at Emmaus are nearby if the baby still allows it. Thirty minutes, then out.</li>
   </ul>
-  <p>The Napoleon III apartments, in the Richelieu wing, suit you if you want rich decoration rather than another gallery. Napoleon III was Napoleon&rsquo;s nephew. He ruled France from 1848 until he lost the Franco-Prussian War in 1870. The style in those rooms is what that defeat ended. You stand in the rooms of the regime whose fall you study tomorrow.</p>
-  <p>Then leave. See the Mona Lisa only if the room is empty enough not to ruin the hour. It will not be. Skip it without guilt.</p>
+  <p>The Mona Lisa room will be crowded. Do not fight it. Let the crowd have the wall, check the painting, then turn around: the Veronese and the Leonardos around you are the better viewing.</p>
+  <p>David&rsquo;s Coronation, Gros&rsquo;s Jaffa, G&eacute;ricault&rsquo;s Raft, Delacroix&rsquo;s Liberty all hang together in Daru and Mollien if you want them, but they are the week&rsquo;s old argument. This morning is for Victory, Venus, Leonardo, Raphael, Veronese, and Vermeer.</p>
   <div class="card lunch">
     <p class="label">Lunch &middot; 12:30</p>
-    <p>Willi&rsquo;s Wine Bar, 13 rue des Petits-Champs, open since 1980. The wine list is the reason. The food is simple bistro cooking, which suits a baby, and the room is calm. Book 12:30. <a href="https://www.google.com/maps/dir/?api=1&origin=Musee+du+Louvre&destination=Willi's+Wine+Bar,+13+Rue+des+Petits-Champs,+Paris&travelmode=walking">Route from the Louvre</a>.</p>
-    <p>Restaurant du Palais Royal, 110 Galerie de Valois, is the alternative if you want to eat inside historic arcades rather than in a wine bar. In November you sit indoors, which helps after Denon. <a href="https://www.google.com/maps/dir/?api=1&origin=Musee+du+Louvre&destination=Restaurant+du+Palais+Royal,+110+Galerie+de+Valois,+Paris&travelmode=walking">Route</a>. If Willi&rsquo;s is full, Juveniles, 47 rue de Richelieu, is the smaller wine bar nearby.</p>
+    <p>Willi&rsquo;s Wine Bar, 13 rue des Petits-Champs, open since 1980. The wine list is the reason. The food is simple bistro cooking, which suits a baby, and the room is calm. Book 12:30. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Musee+du+Louvre&destination=Willi's+Wine+Bar,+13+Rue+des+Petits-Champs,+Paris&travelmode=walking">Route from the Louvre</a>.</p>
+    <p>Restaurant du Palais Royal, 110 Galerie de Valois, is the alternative if you want to eat inside historic arcades rather than in a wine bar. In November you sit indoors, which helps after Denon. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Musee+du+Louvre&destination=Restaurant+du+Palais+Royal,+110+Galerie+de+Valois,+Paris&travelmode=walking">Route</a>. If Willi&rsquo;s is full, Juveniles, 47 rue de Richelieu, is the smaller wine bar nearby.</p>
   </div>
-  <h3>Only if the Louvre has not finished you</h3>
-  <p>The Orangerie museum stands at the Concorde end of the Tuileries garden, a short walk from the exit. It is closed Tuesdays. Monet&rsquo;s Water Lilies fill two oval rooms, installed after his death as a full environment, not a row of pictures. He gave them to France as a memorial to the peace after World War I. They answer the Army Museum. Forty-five minutes. If you are done, you are done. <a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+de+l'Orangerie,+Paris&travelmode=transit">Route from the apartment</a>. <a href="https://commons.wikimedia.org/w/index.php?search=Mus%C3%A9e+de+l'Orangerie+Nymph%C3%A9as&title=Special:MediaSearch&type=image">Photographs</a>.</p>
   <details class="instead">
-    <summary>Instead of this whole day</summary>
+    <summary>Instead: the Orangerie Museum</summary>
+    <p>The Orangerie museum stands at the Concorde end of the Tuileries garden, a short walk from the exit. It is closed Tuesdays. Monet&rsquo;s Water Lilies fill two oval rooms, installed after his death as a full environment, not a row of pictures. He gave them to France as a memorial to the peace after World War I. They answer the Army Museum. Forty-five minutes. If you are done, you are done. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Musee+de+l'Orangerie,+Paris&travelmode=transit">Route from the apartment</a>. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Mus%C3%A9e+de+l'Orangerie+Nymph%C3%A9as&title=Special:MediaSearch&type=image">Photographs</a>.</p>
+  </details>
+  <details class="instead">
+    <summary>Instead: the Orsay Museum</summary>
     <p>Choose the Orsay museum if you wake up wanting nineteenth-century art more than the palace. It sits on the Day 3 route, Line 4 toward Saint-Germain-des-Pr&eacute;s, so it needs no new route. It is closed Mondays. Never try Orsay and the Louvre on the same day.</p>
   </details>
 </section>
@@ -429,13 +523,19 @@
 <section class="day" id="day6">
   <p class="eyebrow">Day 6 &middot; Thursday &middot; Line 4 to Montparnasse, then a train</p>
   <h2>Versailles (Thursday)</h2>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Chateau+de+Versailles&travelmode=transit">Transit: apartment &rarr; palace &nearr;</a></p>
-  <p>Take the Transilien train from Montparnasse to Versailles-Chantiers, about fifteen minutes, then a taxi or a fifteen-minute walk up to the palace. Door to door is about an hour and a quarter if connections work. The other line, RER C from Saint-Michel to Versailles-Ch&acirc;teau-Rive-Gauche, stops closer to the gate, but the transfer between metro and RER at Saint-Michel is a long walk with a stroller. Use Chantiers unless you want to arrive at the door. <a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Gare+de+Versailles-Chantiers&travelmode=transit">Chantiers</a> &middot; <a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Gare+Versailles-Chateau-Rive-Gauche&travelmode=transit">Rive-Gauche</a></p>
+  <p class="official">Official site: <a target="_blank" rel="noopener" href="https://www.chateauversailles.fr/">Palace of Versailles</a></p>
+  <p class="weather" data-weather-day="day6"><span class="w-icon" aria-hidden="true"><svg><use href="#w-cloud"/></svg></span><span class="w-main">12&ndash;17&deg;C &middot; Overcast</span><span>Dry &middot; Wind 17 km/h</span><span class="w-src">Sample: 13 Nov 2025</span></p>
   <figure>
     <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chateau_Versailles_Galerie_des_Glaces.jpg?width=1200" alt="The Hall of Mirrors" loading="lazy">
-    <figcaption>The Hall of Mirrors. <a href="https://commons.wikimedia.org/w/index.php?search=Hall+of+Mirrors+Versailles&title=Special:MediaSearch&type=image">Photographs</a>. <a href="https://www.chateauversailles.fr/">Tickets</a>.</figcaption>
+    <figcaption>The Hall of Mirrors. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Hall+of+Mirrors+Versailles&title=Special:MediaSearch&type=image">Photographs</a>. <a target="_blank" rel="noopener" href="https://www.chateauversailles.fr/">Tickets</a>.</figcaption>
   </figure>
-  <p>Go for one room.</p>
+  <p>Versailles is Louis XIV&rsquo;s palace, and the Hall of Mirrors is the one room to go for: the stage of the 1871 German Empire proclamation and the 1919 peace treaty.</p>
+  <p class="transit-label">Transit: apartment &rarr; palace</p>
+  <div class="map-embed">
+    <iframe title="Transit route from the apartment to the palace of Versailles" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Chateau%20de%20Versailles&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Chateau+de+Versailles&travelmode=transit">Open in Google Maps &nearr;</a></p>
+  </div>
+  <p>Take the Transilien train from Montparnasse to Versailles-Chantiers, about fifteen minutes, then a taxi or a fifteen-minute walk up to the palace. Door to door is about an hour and a quarter if connections work. The other line, RER C from Saint-Michel to Versailles-Ch&acirc;teau-Rive-Gauche, stops closer to the gate, but the transfer between metro and RER at Saint-Michel is a long walk with a stroller. Use Chantiers unless you want to arrive at the door. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Gare+de+Versailles-Chantiers&travelmode=transit">Chantiers</a> &middot; <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Gare+Versailles-Chateau-Rive-Gauche&travelmode=transit">Rive-Gauche</a></p>
   <p>The Hall of Mirrors was built between 1678 and 1684 by Hardouin-Mansart and Le Brun. It was the ceremonial gallery of the absolute monarchy: seventeen windows on one side, seventeen mirrored arches on the other, the park outside and the court inside. On 18 January 1871, while Paris was still surrounded in the Franco-Prussian War, the German Empire was proclaimed in this room. The place was chosen to humiliate France. On 28 June 1919 the treaty that ended World War I was signed in the same room. That was the symbolic reversal. The Army Museum showed the wars. This is the stage where the defeat and the peace were both performed. Stand there long enough to see it as a stage, not as gold decoration.</p>
   <p>The rest of the palace is the machine those later wars answered. Louis XIV moved the court here in 1682 and forced the nobility to live around him on a schedule he controlled. Walk the royal apartments with that in mind. Two hours inside is enough.</p>
   <p>From the terrace, look once at Le N&ocirc;tre&rsquo;s garden axes. You saw the same idea, small and quiet, at Sceaux. In November the fountains are off and the gardens are not the visit. Do not add the Trianon palaces.</p>
@@ -444,14 +544,18 @@
     <p>Ore, in the Pavillon Dufour, is Alain Ducasse&rsquo;s restaurant inside the palace. Book it. It avoids another transfer with a tired baby, and the cooking is a real meal, not a museum caf&eacute;. It is the nicest room of the week&rsquo;s lunches. A carrier is easier than a stroller.</p>
     <p>To leave the palace, taxi five minutes to the Saint-Louis district and book a simple bistro there. Eat, then take the train. Plan nothing after you return to Bagneux.</p>
   </div>
-  <details class="instead" open>
+  <details class="instead">
     <summary>Instead: the Ch&acirc;teau de Vincennes</summary>
-    <p>This is not a lesser day. It is the sterner building, and it will be empty.</p>
-    <p><a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Chateau+de+Vincennes&travelmode=transit">Transit: apartment &rarr; Vincennes &nearr;</a></p>
     <figure>
       <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Donjon_du_Ch%C3%A2teau_de_Vincennes.jpg?width=1200" alt="The keep at Vincennes" loading="lazy">
-      <figcaption>The keep. <a href="https://commons.wikimedia.org/w/index.php?search=Ch%C3%A2teau+de+Vincennes&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+      <figcaption>The keep. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Ch%C3%A2teau+de+Vincennes&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
     </figure>
+    <p>This is not a lesser day. It is the sterner building, and it will be empty.</p>
+    <p class="transit-label">Transit: apartment &rarr; Vincennes</p>
+    <div class="map-embed">
+      <iframe title="Transit route from the apartment to the Ch&acirc;teau de Vincennes" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Chateau%20de%20Vincennes&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Chateau+de+Vincennes&travelmode=transit">Open in Google Maps &nearr;</a></p>
+    </div>
     <p>Take Line 4 to Ch&acirc;telet, then Line 1 east to the last stop. The ch&acirc;teau is at the station. This commute is easier than Versailles.</p>
     <p>The keep was raised in the 1300s. At about fifty meters it is the tallest medieval keep in Europe. You can still read it as a weapon. The chapel was started under King Charles V and finished under King Fran&ccedil;ois I. It has fine stained glass and no queue. The moat was used for executions more than once. On 21 March 1804 the Duke of Enghien was tried by a rigged court and shot here on Napoleon&rsquo;s order. The political murder shocked Europe. Under the Nazi occupation the fortress was a German base, and resistance fighters were shot in the moat. A memorial marks the spot. Versailles is the diplomatic stage. Vincennes is the fortress itself.</p>
     <p>The town starts at the gate. Book a simple table there instead of returning to Paris hungry. Choose Versailles or Vincennes. Do not do both.</p>
@@ -461,38 +565,59 @@
 
 <section class="day" id="day7">
   <p class="eyebrow">Day 7 &middot; Friday &middot; Line 4 to Ch&acirc;telet, Line 1 toward Alma</p>
-  <h2>Galerie Dior (Friday)</h2>
-  <p>The war theme now runs through the whole week. This day is the fashion half of the story, done as an exhibition, not as shopping. Same change of lines as the Louvre. The gallery is open Friday (it closes Tuesdays).</p>
-  <p><a class="transit" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Galerie+Dior,+11+Rue+Francois+Ier,+Paris&travelmode=transit">Transit: apartment &rarr; gallery &nearr;</a></p>
-  <p>The gallery sits at 11 rue Fran&ccedil;ois Ier, beside 30 Avenue Montaigne, the house where Christian Dior showed his first collection. On 12 February 1947 the New Look brought back the narrow waist and the full skirt after years of wartime fabric rationing. It was praised, and it was attacked as wasteful in a country still short of fabric. That argument links it to the war theme of the week. The gallery is a designed exhibition, more spectacular than quiet. Only tickets bought on the gallery site guarantee entry, so book there. Allow ninety minutes. <a href="https://www.galeriedior.com/">Galerie Dior</a>.</p>
-  <p>The Alma boat pier is in this neighborhood. If the boat moved from Day 4, take it today. One boat total, never two.</p>
-  <div class="card lunch">
-    <p class="label">Lunch</p>
-    <p>Taxi down to the 7th district, which you know by now. Choose Caf&eacute; Constant if you have not eaten there, or Fontaine de Mars if you have. Champagne suits this lunch. To walk to a table instead, Le Relais Plaza at the Plaza Ath&eacute;n&eacute;e, 25 Avenue Montaigne, is the fashion-history room: expensive, formal, and only worth it if a grand hotel dining room sounds like the point rather than a risk with a baby.</p>
+  <h2>Galerie Dior, then the boat (Friday)</h2>
+  <p class="official">Official sites: <a target="_blank" rel="noopener" href="https://www.galeriedior.com/">Galerie Dior</a> &middot; <a target="_blank" rel="noopener" href="https://www.bateauxparisiens.com/">Bateaux Parisiens</a></p>
+  <p class="weather" data-weather-day="day7"><span class="w-icon" aria-hidden="true"><svg><use href="#w-drizzle"/></svg></span><span class="w-main">14&ndash;19&deg;C &middot; Dense drizzle</span><span>2.1 mm rain &middot; Wind 13 km/h</span><span class="w-src">Sample: 14 Nov 2025</span></p>
+  <figure>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Christian%20Dior%20Exhibit%20%2836140266065%29.jpg?width=1200" alt="Christian Dior dresses on display in Paris" loading="lazy">
+    <figcaption>Dior dresses on display in Paris, the same house style as the gallery. This 2017 show was at the Mus&eacute;e des Arts D&eacute;coratifs, not the Galerie Dior, where photography is restricted. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Christian+Dior+exhibit+Paris&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+  </figure>
+  <p>Galerie Dior at 11 rue Fran&ccedil;ois Ier is the fashion exhibition that closes the week, showing how Paris rebuilt its image after the war. Same change of lines as the Louvre. The gallery is open Friday (it closes Tuesdays).</p>
+  <p class="transit-label">Transit: apartment &rarr; gallery</p>
+  <div class="map-embed">
+    <iframe title="Transit route from the apartment to the Galerie Dior" src="https://maps.google.com/maps?saddr=48.8035,2.3174&amp;daddr=Galerie%20Dior,%2011%20Rue%20Francois%20Ier,%20Paris&amp;dirflg=r&amp;output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p class="map-link"><a class="transit" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Galerie+Dior,+11+Rue+Francois+Ier,+Paris&travelmode=transit">Open in Google Maps &nearr;</a></p>
   </div>
-  <details class="instead">
-    <summary>If it has reopened: Yves Saint Laurent</summary>
-    <p>The Saint Laurent museum at 5 Avenue Marceau is shut for renovation until autumn 2027. Check <a href="https://museeyslparis.com/">the museum site</a> before you go. If it has reopened, it is the quieter room: the preserved studio with sketches, fabric tests, the worktable, and the mirror. Ten minutes on foot from Dior. Add it only if the morning is easy. Do not add the Marais as well.</p>
-  </details>
+  <p>The gallery sits at 11 rue Fran&ccedil;ois Ier, beside 30 Avenue Montaigne, the house where Christian Dior showed his first collection. On 12 February 1947 the New Look brought back the narrow waist and the full skirt after years of wartime fabric rationing. It was praised, and it was attacked as wasteful in a country still short of fabric. That argument links it to the war theme of the week. The gallery is a designed exhibition, more spectacular than quiet. Only tickets bought on the gallery site guarantee entry, so book there. Allow ninety minutes. <a target="_blank" rel="noopener" href="https://www.galeriedior.com/">Galerie Dior</a>.</p>
+  <div class="card lunch">
+    <p class="label">Lunch, lighter than usual</p>
+    <p>You have a boat at 4. Taxi down to the 7th district, which you know by now. Choose Caf&eacute; Constant if you have not eaten there, or Fontaine de Mars if you have. Keep it to an hour and keep a rest before the pier. To walk to a table instead, Le Relais Plaza at the Plaza Ath&eacute;n&eacute;e, 25 Avenue Montaigne, is the fashion-history room: expensive, formal, and only worth it if a grand hotel dining room sounds like the point rather than a risk with a baby.</p>
+  </div>
+  <p>Then the river. The Alma pier is in this neighborhood, so keep the rest between lunch and the boat. If you have the legs, walk toward Pont Alexandre III. If not, taxi to the pier.</p>
+  <figure>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pont_Alexandre_III.jpg?width=1200" alt="Pont Alexandre III" loading="lazy">
+    <figcaption>Pont Alexandre III, on the axis of the Invalides. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Pont+Alexandre+III&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+  </figure>
+  <figure>
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Bateaux%20Mouches%20on%20the%20Seine%2C%20Paris%20July%202013.jpg?width=1200" alt="A Bateaux Mouches boat on the Seine, Paris" loading="lazy">
+    <figcaption>A tour boat on the Seine, same idea as the 4pm sailing. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Bateaux+Mouches+Seine&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+  </figure>
+  <p>The bridge was built for the 1900 world fair and named after the Russian tsar. It marked the alliance between France and Russia. It is a single low steel arch, so it does not block the view, and it sits on the axis running from the Invalides dome. Gold statues, lamp posts, the Grand Palais beyond.</p>
+  <div class="card">
+    <p class="label">The boat &middot; sailing nearest 4pm</p>
+    <p>One hour, sightseeing only, not dinner and not a show. Book Bateaux Parisiens or Vedettes de Paris from Port de la Bourdonnais, at Pont de l&rsquo;Alma, on the sailing closest to 4pm. Choose a larger boat. Sit outside for the twenty minutes that matter if it is dry, inside if the wind is up. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Port+de+la+Bourdonnais,+Paris&travelmode=transit">Pier from the apartment</a>. <a target="_blank" rel="noopener" href="https://www.bateauxparisiens.com/">Bateaux Parisiens</a>.</p>
+    <p>The Eiffel Tower will appear from the water as the lights replace the sky. That is the version worth having. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Seine+cruise+Paris+Eiffel&title=Special:MediaSearch&type=image">The river in photographs</a>.</p>
+  </div>
+  <p>Home by about 6. Take one cruise total, never two.</p>
   <details class="instead">
     <summary>Instead: the M&eacute;morial de la Shoah</summary>
     <p>Choose this only if you want the other half of the occupation story. Then the day ends there. Do not combine it with boutiques.</p>
-    <p><a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Memorial+de+la+Shoah,+Paris&travelmode=transit">Transit from the apartment</a></p>
+    <p><a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Memorial+de+la+Shoah,+Paris&travelmode=transit">Transit from the apartment</a></p>
     <p>The memorial stands on rue Geoffroy-l&rsquo;Asnier, in the Marais. Take Line 4 to Ch&acirc;telet, then walk. The Liberation museum told the military story of the occupation. This tells who was taken from the city, with help from the French state. The Vichy regime was the French government that cooperated with Germany. French police carried out the roundup of July 1942 and the deportations to Nazi death camps. The Wall of Names lists about 76,000 Jews deported from France. The wall and the reading room are the visit. It is indoors and works with a carrier. It is closed on Saturdays.</p>
-    <p>Allow seventy-five to ninety minutes. Then a quiet lunch, not a wine crawl. Breizh Caf&eacute;, 109 rue Vieille du Temple: buckwheat pancakes and cider, calm, easy with a baby. <a href="https://www.google.com/maps/dir/?api=1&origin=Memorial+de+la+Shoah,+Paris&destination=Breizh+Cafe,+109+Rue+Vieille+du+Temple,+Paris&travelmode=walking">Route from the memorial</a>. Then Bagneux. If that weight does not fit this trip, the fashion house is a fine choice. <a href="https://www.memorialdelashoah.org/">The memorial</a>.</p>
+    <p>Allow seventy-five to ninety minutes. Then a quiet lunch, not a wine crawl. Breizh Caf&eacute;, 109 rue Vieille du Temple: buckwheat pancakes and cider, calm, easy with a baby. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Memorial+de+la+Shoah,+Paris&destination=Breizh+Cafe,+109+Rue+Vieille+du+Temple,+Paris&travelmode=walking">Route from the memorial</a>. Then Bagneux. If that weight does not fit this trip, the fashion house is a fine choice. <a target="_blank" rel="noopener" href="https://www.memorialdelashoah.org/">The memorial</a>.</p>
   </details>
   <details class="instead">
-    <summary>Instead: the Conciergerie, and the other boat</summary>
-    <p>This is war inside the city, a century and a half before the world wars.</p>
-    <p><a href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Conciergerie,+Paris&travelmode=transit">Transit from the apartment</a></p>
+    <summary>Instead: the Conciergerie</summary>
     <figure>
       <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Conciergerie_Paris.jpg?width=1200" alt="The Conciergerie on the Île de la Cité" loading="lazy">
-      <figcaption>The Conciergerie on the &Icirc;le de la Cit&eacute;. <a href="https://commons.wikimedia.org/w/index.php?search=Conciergerie+Paris&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
+      <figcaption>The Conciergerie on the &Icirc;le de la Cit&eacute;. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Conciergerie+Paris&title=Special:MediaSearch&type=image">Photographs</a>.</figcaption>
     </figure>
+    <p>This is war inside the city, a century and a half before the world wars.</p>
+    <p><a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=48.8035,2.3174&destination=Conciergerie,+Paris&travelmode=transit">Transit from the apartment</a></p>
     <p>Take Line 4 to Cit&eacute;. The station has stairs and is awkward with a stroller. Wear the baby, or taxi there and take the metro home.</p>
     <p>The Conciergerie was the medieval royal palace on the island in the Seine, then a prison. The Hall of Soldiers was built in the early 1300s under King Philippe le Bel. It is one of the finest Gothic halls in Europe. During the French Revolution this building was the waiting room for the guillotine. Marie-Antoinette, the queen, was held here before her execution on 16 October 1793. The Revolutionary court sat next door and sent thousands to their deaths in 1793 to 1794. See the hall and the cell. Skip the wax figures. An hour to seventy-five minutes.</p>
-    <p>Sainte-Chapelle is two hundred meters away. King Louis IX built it in the 1240s to hold the Crown of Thorns, a relic believed to come from Jesus. The upper chapel is walls of stained glass. Twenty minutes there can be worth it even in weak November light. Go in only if you are already at the door and you want the glass. It is not the reason for the day. Book if you go. <a href="https://commons.wikimedia.org/w/index.php?search=Sainte-Chapelle+upper+chapel&title=Special:MediaSearch&type=image">Photographs</a>.</p>
-    <p>Lunch: Le Reminet, 3 rue des Grands Degr&eacute;s, a small serious bistro across the bridge in the 5th district. Book. <a href="https://www.google.com/maps/dir/?api=1&origin=Conciergerie,+Paris&destination=Le+Reminet,+3+Rue+des+Grands+Degr%C3%A9s,+Paris&travelmode=walking">Route</a>. Brasserie de l&rsquo;Isle Saint-Louis, 55 quai de Bourbon, is the easier table, with a view and more tourists.</p>
+    <p>Sainte-Chapelle is two hundred meters away. King Louis IX built it in the 1240s to hold the Crown of Thorns, a relic believed to come from Jesus. The upper chapel is walls of stained glass. Twenty minutes there can be worth it even in weak November light. Go in only if you are already at the door and you want the glass. It is not the reason for the day. Book if you go. <a target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?search=Sainte-Chapelle+upper+chapel&title=Special:MediaSearch&type=image">Photographs</a>.</p>
+    <p>Lunch: Le Reminet, 3 rue des Grands Degr&eacute;s, a small serious bistro across the bridge in the 5th district. Book. <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Conciergerie,+Paris&destination=Le+Reminet,+3+Rue+des+Grands+Degr%C3%A9s,+Paris&travelmode=walking">Route</a>. Brasserie de l&rsquo;Isle Saint-Louis, 55 quai de Bourbon, is the easier table, with a view and more tourists.</p>
     <p>Vedettes du Pont Neuf leaves from the tip of the island. This is the other good boat, at the same 4pm hour: medieval Paris from the water, not the grand axis of the 7th district. Only if you did not sail from Alma.</p>
   </details>
 </section>
@@ -500,33 +625,9 @@
 <section class="day" id="day8">
   <p class="eyebrow">Day 8 &middot; Saturday</p>
   <h2>Out (Saturday)</h2>
-  <p>Sleep in. Coffee. If the flight is late, repeat whichever Line 4 lunch you liked best, and come straight back. No new museum, no new line.</p>
+  <p class="weather" data-weather-day="day8"><span class="w-icon" aria-hidden="true"><svg><use href="#w-rain"/></svg></span><span class="w-main">10&ndash;14&deg;C &middot; Moderate rain</span><span>24.4 mm rain &middot; Wind 12 km/h</span><span class="w-src">Sample: 15 Nov 2025</span></p>
+  <p>The last morning stays in Bagneux. Sleep in, coffee, no new museum, no new line. If the flight is late, repeat whichever Line 4 lunch you liked best, and come straight back.</p>
   <p>Orly is the simple airport from Bagneux. For Charles de Gaulle, leave more time than the map suggests. Take a taxi again.</p>
-</section>
-
-<section class="block" id="if-wrong">
-  <p class="eyebrow">If a day goes wrong</p>
-  <h2>Keep three things</h2>
-  <p>Keep three things and drop the rest without guilt.</p>
-  <ul class="tight">
-    <li>The Louvre, one wing, with a clear focus.</li>
-    <li>Versailles or Vincennes: the ceremony room or the fortress.</li>
-    <li>The Invalides dome, even if you never return for the galleries.</li>
-  </ul>
-  <p>The boat can move by a day. The Liberation museum can swap with the Louvre. Rodin replaces a second morning of uniforms. Sceaux replaces any Paris day that starts badly. A bad night means one visit the next day, not two.</p>
-</section>
-
-<section class="block" id="notes">
-  <p class="eyebrow">Notes</p>
-  <h2>Small things that save days</h2>
-  <h3>Sunday</h3>
-  <p>If a Sunday falls in the week, Saint-Sulpice is a direct stop on Line 4. The organ is a Cavaill&eacute;-Coll, the most famous French organ builder. A morning service asks nothing of you: sit at the back, baby in the carrier, leave when you need to. No ticket. Delacroix&rsquo;s Jacob Wrestling with the Angel is in a side chapel if you want fifteen minutes of painting with no queue. Do not turn it into a church tour.</p>
-  <h3>11 November</h3>
-  <p>11 November is the anniversary of the end of World War I. France holds ceremonies that day. The morning ceremony at the Arc de Triomphe is early and crowded. The better version is the evening relighting of the unknown soldier&rsquo;s flame, at Etoile, which is on the Line 1 you already ride. Go only if a day has ended early. Never attach it to the Louvre day.</p>
-  <h3>Stations</h3>
-  <p>Bagneux–Lucie Aubrac is step-free. Ch&acirc;telet is a maze. Cit&eacute; has stairs. One change of lines is fine. Two changes, with a stroller and a feeding, ruins a day. A taxi to Place Vauban, to the boat, or back from Alma is not a failure of the plan.</p>
-  <h3>Food</h3>
-  <p>Lunch at 12:30 is when a sleeping baby is welcome and a kitchen still cares. November food means stews, oysters, and red wine. Beaujolais Nouveau, the new wine released on the third Thursday of November, is one glass, not an event. You need no dinner booking all week.</p>
 </section>
 
 </div>
@@ -535,8 +636,87 @@
 <footer>
   <div class="wrap">
     <p>Eight days from Bagneux &middot; November. Images via Wikimedia Commons. Maps via Google Maps.</p>
+    <p id="weather-note">Weather shows historical samples for Bagneux (8&ndash;15 Nov 2025, Open-Meteo archive), not the trip dates. When trip dates are set and a live forecast exists, this page replaces the samples automatically.</p>
   </div>
 </footer>
+
+<script>
+(function () {
+  var LAT = 48.8035, LON = 2.3174;
+  var TRIP_START = null;
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var q = params.get("trip_start");
+    if (q && /^\d{4}-\d{2}-\d{2}$/.test(q)) TRIP_START = q;
+  } catch (e) { TRIP_START = null; }
+
+  var WMO = {0:"Clear",1:"Mostly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Icy fog",51:"Light drizzle",53:"Moderate drizzle",55:"Dense drizzle",56:"Freezing drizzle",57:"Freezing drizzle",61:"Light rain",63:"Moderate rain",65:"Heavy rain",66:"Freezing rain",67:"Freezing rain",71:"Light snow",73:"Moderate snow",75:"Heavy snow",77:"Snow grains",80:"Light showers",81:"Moderate showers",82:"Violent showers",85:"Light snow showers",86:"Heavy snow showers",95:"Thunderstorm",96:"Thunderstorm with hail",99:"Thunderstorm with hail"};
+  function label(code) { return WMO[code] || "Overcast"; }
+  function iconFor(code) {
+    if (code === 0) return "w-sun";
+    if (code === 1 || code === 2) return "w-partly";
+    if (code === 45 || code === 48) return "w-fog";
+    if ([51, 53, 55, 56, 57].indexOf(code) >= 0) return "w-drizzle";
+    if ([61, 63, 65, 66, 67, 80, 81, 82].indexOf(code) >= 0) return "w-rain";
+    if ([71, 73, 75, 77, 85, 86].indexOf(code) >= 0) return "w-snow";
+    if ([95, 96, 99].indexOf(code) >= 0) return "w-storm";
+    return "w-cloud";
+  }
+  function rainText(mm) {
+    if (mm == null) return "";
+    return mm < 0.2 ? "Dry" : (String(mm) + " mm rain");
+  }
+
+  function paint(el, min, max, code, precip, wind, srcText, live) {
+    var main = el.querySelector(".w-main");
+    var detail = null;
+    var spans = el.querySelectorAll("span");
+    for (var i = 0; i < spans.length; i++) {
+      if (!spans[i].classList.contains("w-main") && !spans[i].classList.contains("w-src") && !spans[i].classList.contains("w-icon")) { detail = spans[i]; break; }
+    }
+    var src = el.querySelector(".w-src");
+    var use = el.querySelector("use");
+    var icon = el.querySelector(".w-icon");
+    var iconId = iconFor(code);
+    if (main) main.textContent = Math.round(min) + "\u2013" + Math.round(max) + "\u00B0C \u00B7 " + label(code);
+    if (detail) detail.textContent = rainText(precip) + " \u00B7 Wind " + Math.round(wind) + " km/h";
+    if (src) src.textContent = srcText;
+    if (use) use.setAttribute("href", "#" + iconId);
+    if (icon) icon.classList.toggle("sun", iconId === "w-sun" || iconId === "w-partly");
+    el.classList.toggle("live", !!live);
+  }
+
+  function addDays(iso, n) {
+    var d = new Date(iso + "T12:00:00");
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+
+  if (!TRIP_START) return;
+
+  var start = TRIP_START, end = addDays(TRIP_START, 7);
+  var url = "https://api.open-meteo.com/v1/forecast?latitude=" + LAT + "&longitude=" + LON +
+    "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max" +
+    "&timezone=Europe%2FParis&start_date=" + start + "&end_date=" + end;
+
+  fetch(url).then(function (r) {
+    if (!r.ok) throw new Error("forecast unavailable");
+    return r.json();
+  }).then(function (j) {
+    if (!j || !j.daily || !j.daily.time || j.daily.time.length < 8) throw new Error("short forecast");
+    var days = ["day1","day2","day3","day4","day5","day6","day7","day8"];
+    days.forEach(function (key, i) {
+      var el = document.querySelector('[data-weather-day="' + key + '"]');
+      if (!el) return;
+      paint(el, j.daily.temperature_2m_min[i], j.daily.temperature_2m_max[i],
+        j.daily.weather_code[i], j.daily.precipitation_sum[i],
+        j.daily.wind_speed_10m_max[i], "Live forecast: " + j.daily.time[i], true);
+    });
+    var note = document.getElementById("weather-note");
+    if (note) note.textContent = "Weather shows a live Open-Meteo forecast for Bagneux (" + start + " to " + end + ").";
+  }).catch(function () { /* keep historical samples */ });
+})();
+</script>
 
 </body>
 </html>
