@@ -1,6 +1,6 @@
 # paris-itinerary
 
-Eight days from one apartment in Bagneux. One serious visit each morning, lunch as the meal you book, home before the late-afternoon crash.
+Six days from one apartment at Ménilmontant. One serious visit each morning, lunch as the meal you book, home before the late-afternoon crash.
 
 Single-file site: `index.html`. No build step.
 
@@ -18,7 +18,7 @@ Suggested repo name: `paris-itinerary`.
 ```sh
 git init
 git add index.html .nojekyll README.md
-git commit -m "Paris itinerary: eight days from Bagneux"
+git commit -m "Paris itinerary: six days from Ménilmontant"
 gh repo create paris-itinerary --public --source=. --push
 ```
 
@@ -33,4 +33,4 @@ A static Actions workflow is included at `.github/workflows/pages.yml` if you pr
 
 ## Edit
 
-Edit `index.html` directly. All styling is inline in `<style>`. Sections are `day1`…`day8`, plus `before`, `arrival`, `if-wrong`, `notes`.
+Edit `index.html` directly. All styling is inline in `<style>`. Sections are `day1`…`day6`, plus `thesis` and `before`.

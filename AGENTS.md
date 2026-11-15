@@ -10,7 +10,7 @@ Do not stage or commit until all of these pass.
    - street addresses (e.g. Rue, Avenue, Bd with a number)
    - email addresses
    - phone numbers
-   - home GPS coordinates (the public station pin 48.8035,2.3174 is allowed; anything more precise is not)
+   - home GPS coordinates (the public station pin 48.8631,2.3875 is allowed; anything more precise is not)
    - full names of private individuals, booking references, API keys
 2. Scan for anything revealing whereabouts on a specific date:
    - calendar dates or date ranges for the trip (weekday names alone are allowed; exact dates are not)
