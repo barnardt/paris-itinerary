@@ -34,3 +34,9 @@ A static Actions workflow is included at `.github/workflows/pages.yml` if you pr
 ## Edit
 
 Edit `index.html` directly. All styling is inline in `<style>`. Sections are `day1`…`day6`, plus `thesis` and `before`.
+
+## Weather
+
+The six day strips load a live Open-Meteo forecast from the Swiss coordinates of the Ménilmontant/Père Lachaise pin (`48.8631, 2.3875`). No trip dates are stored in the file: on load the page anchors the plan to the Monday of the current Paris week (on a Sunday it takes the next day), which is exactly the Monday-to-Saturday the itinerary describes. Forecasts refresh every 30 minutes while the tab is open and whenever the tab becomes visible again.
+
+If the request fails, or a day falls outside the forecast range, the baked-in November figures stay on that strip and the footer explains why. `?trip_start=YYYY-MM-DD` overrides the anchor for testing, with any Monday.
